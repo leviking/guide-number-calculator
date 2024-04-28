@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flash Distance Calculator</title>
+    <style>
+	@font-face {
+	    font-family: 'Berkeley Mono';
+	    src: url("BerkeleyMono-Regular.woff");
+	}
+        body {
+            font-family: 'Berkeley Mono', sans-serif;
+	    text-transform: uppercase !important;
+            background-color: #fff;
+            margin: 0;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+	    color: #000;
+        }
+
+        h1 {
+            text-align: center;
+            color: #000;
+        }
+
+        form {
+	    width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 0px;
+            border-radius: 0px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #000;
+	    border: 1px solid black;
+	    border-bottom-style: dashed;
+	    padding: 2px;
+	    margin-bottom: 0px;
+	    text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+	    font-size: 24px;
+            padding: 8px;
+            margin-bottom: 0px;
+            border: 1px solid #000;
+	    border-top-style: none;
+	    border-bottom-style: none;
+            border-radius: 0px;
+            box-sizing: border-box;
+        }
+
+        button {
+	    margin-top: 16px;
+	    font-size: 24px;
+            background-color: #fff;
+            width: 100%;
+            color: #000;
+            padding: 10px;
+            border: 1px solid black;
+	    box-shadow: 3px 3px;
+            border-radius: 0px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #fefefe;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 20px;
+            color: #000;
+        }
+
+        #result {
+            font-weight: bold;
+            color: #2aaf20;
+        }
+
+        #written {
+            margin-top: 10px;
+            color: #555;
+        }
+
+	.last {
+	    border-bottom-style: solid;
+	}
+}
+    </style>
+</head>
+<body>
+    <h1>Flash Distance Calculator</h1>
+    <div>Distance to Subject: </div>
+    <div id="result">-</div>
+    <form>
+        <label for="guide">Guide Number</label>
+        <input type="number" id="guide" pattern="[0-9]*" inputMode="decimal" value="100" placeholder="-" required>
+
+        <label for="iso">ISO</label>
+        <input type="number" id="iso" value="100" pattern="[0-9]*" inputMode="decimal" onfocus="this.value=''" placeholder="-" required>
+
+        <label for="aperture">Aperture (f-stop)</label>
+        <input class="last" type="number" step="0.1" id="aperture" pattern="[0-9]*" inputMode="decimal" placeholder="-" onfocus="this.value=''" required>
+
+        <button type="button" id="calculate">CALCULATE</button>
+    </form>
+
+    <p id="written"></p>
+    <script>
+        function calculateFlashDistance(guide, iso, aperture) {
+            const ev100 = Math.sqrt(iso / 100);
+            const compensatedGuideNumber = guide / ev100;
+	    const distance = compensatedGuideNumber / aperture;
+
+            return distance;
+        }
+
+
+        document.getElementById('calculate').addEventListener('click', function () {
+            const guide = parseFloat(document.getElementById('guide').value);
+            const iso = parseFloat(document.getElementById('iso').value);
+            const aperture = parseFloat(document.getElementById('aperture').value);
+
+            console.log('guide: ', guide, 'iso: ', iso, 'fstop: ', aperture)
+            const flashDistance = calculateFlashDistance(guide, iso, aperture);
+	    const flashDistanceText = `${ ( Math.round(flashDistance * 100) / 100 ).toFixed(2) }`;
+            document.getElementById('result').style.color = "#2aaf20"
+	    document.getElementById('result').textContent = flashDistanceText;
+        });
+    </script>
+</body>
+</html>

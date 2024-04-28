@@ -1,0 +1,131 @@
+<dom-module id="guide-number">
+  <template>
+    <style>
+    :root {
+      --primary-text-color: #f5f5f5
+    }
+    :host {
+      display: block;
+      color: #f5f5f5;
+      --paper-font-common-base: {
+      font-family: Roboto, Raleway, sans-serif;
+      };
+    }
+    div {
+      color: inherit;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+    }
+    #title {
+      text-align: center;
+      font-size: 36px;
+    }
+    #container {
+      width: 50%;
+    }
+    #power {
+      display: inline-block;
+      float: left;
+      width: 60%;
+    }
+    #iso {
+      display: inline-block;
+      float: right;
+      width: 30%;
+    }
+    #aperature {
+      display: inline-block;
+      float: left;
+      width: 45%;
+    }
+    #distance {
+      display: inline-block;
+      float: right;
+      width: 45%;
+    }
+    #answer {
+      margin-top: 10px;
+      font-size: 36px;
+      text-align: center;
+    }
+    .hints {
+      text-align: center;
+    }
+    </style>
+    <div id="container">
+    <div id="title">Guide Number Calculator</div>
+    <div>
+      <paper-input id="power" type="number" label="Full Power Guide Number" auto-validate="" allowed-pattern="[0-9.]" value="{{guide}}">
+      </paper-input>
+      <paper-input id="iso" type="number" label="Film ISO" auto-validate="" allowed-pattern="[0-9.]" value="{{iso}}">
+      </paper-input>
+    </div>
+    <div>
+      <paper-input id="aperature" type="number" label="Aperature" auto-validate="" allowed-pattern="[0-9.]" value="{{aperature}}"> <div slot="prefix">f/</div>
+      </paper-input>
+      <paper-input id="distance" type="number" label="Distance" auto-validate="" allowed-pattern="[0-9.]" value="{{distance}}"><div slot="suffix">m</div>
+      </paper-input>
+    </div>
+    <div id="answer">[[power]]</div>
+    <template is="dom-if" if="[[sixteenths]]">
+      <div class="hints"> [[sixteenths]]/16</div>
+    </template>
+  </div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class GuideNumber extends Polymer.Element {
+      static get is() { return 'guide-number'; }
+      static get properties() {
+        return {
+          guide: {
+            type: Number,
+            notify: true
+          },
+          iso: {
+            type: Number,
+            value: 100,
+            notify: true
+          },
+          aperature: {
+            type: Number,
+            notify: true
+          },
+          distance: {
+            type: Number,
+            notify: true
+          },
+          power: {
+            type: Number,
+            computed: 'getPower(guide, aperature, distance, iso)',
+            notify: true
+          },
+          sixteenths: {
+            type: Number,
+            computed: 'getSixteenths(power)',
+            notify: true
+          }
+        };
+      }
+      getPower(guide, aperature, distance, iso) {
+        var fractPower = (Math.pow(((aperature * distance)/guide),2) / Math.sqrt(iso/100)).toFixed(4)
+        // console.log(isNaN(fractPower))
+        if (isNaN(fractPower)) {
+          return
+        }
+        else {
+          return fractPower
+        }
+      }
+      getSixteenths(power) {
+        return Math.round((power)/0.0625)
+      }
+    }
+
+    window.customElements.define(GuideNumber.is, GuideNumber);
