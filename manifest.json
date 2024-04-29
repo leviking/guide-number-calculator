@@ -48,5 +48,13 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Power Calculator",
+      "short_name": "Power",
+      "description": "You know the distance and aperture and need the power setting",
+      "url": "/power.html"
+    }
   ]
 }
